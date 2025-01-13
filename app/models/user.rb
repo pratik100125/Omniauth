@@ -5,32 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,:omniauthable, omniauth_providers: [:google_oauth2, :github]
 
          def self.from_omniauth(auth)
-          user = User.where(email: auth.info.email).first
-        
-          unless user
-            user = User.create(
-              email: auth.info.email,
-              password: Devise.friendly_token[0, 20],
-              provider: auth.provider,
-              uid: auth.uid
-            )
-          end
-        
-          user
-        end
-        
-        def self.from_omniauth(auth)
-          # Look for a user by GitHub UID
-          user = User.where(provider: auth.provider, uid: auth.uid).first
-      
-          unless user
-            user = User.create(
-              provider: auth.provider,
-              uid: auth.uid,
-              name: auth.info.name,
-              email: auth.info.email,
-              password: Devise.friendly_token[0, 20] # Set a random password
-            )
+          user = User.where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+            user.email = auth.info.email
+            user.name = auth.info.name
+            user.image = auth.info.image
+            user.password = Devise.friendly_token[0, 20]
           end
           user
         end
