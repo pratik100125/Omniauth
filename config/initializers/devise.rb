@@ -25,9 +25,15 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
   config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
-  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
-    scope: 'email profile',
-    }
+  # config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
+  #   scope: 'email profile',
+  #   }
+  config.omniauth :github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET'], {
+    scope: 'user,public_repo',
+    redirect_uri: 'http://localhost:3000/users/auth/github/callback'
+  }
+  
+   
   
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
